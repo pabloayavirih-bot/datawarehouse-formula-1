@@ -1,0 +1,64 @@
+{
+	"name": "DF_Silver_Status",
+	"properties": {
+		"folder": {
+			"name": "Silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Status_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenStatus"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_Status_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoStatus"
+				}
+			],
+			"transformations": [
+				{
+					"name": "LimpiezaStatus"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          statusId as string,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenStatus",
+				"OrigenStatus derive(statusId = toInteger(trim(statusId)),",
+				"          status = regexReplace(trim(status), ' +', ' ')) ~> LimpiezaStatus",
+				"LimpiezaStatus sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          statusId as integer,",
+				"          status as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          statusId,",
+				"          status",
+				"     )) ~> DestinoStatus"
+			]
+		}
+	}
+}

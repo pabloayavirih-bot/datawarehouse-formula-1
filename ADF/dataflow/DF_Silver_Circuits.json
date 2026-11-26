@@ -1,0 +1,92 @@
+{
+	"name": "DF_Silver_Circuits",
+	"properties": {
+		"folder": {
+			"name": "Silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Circuits_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenCircuits"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_Circuits_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoCircuits"
+				}
+			],
+			"transformations": [
+				{
+					"name": "LimpiezaCircuits"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          circuitId as string,",
+				"          circuitRef as string,",
+				"          name as string,",
+				"          location as string,",
+				"          country as string,",
+				"          lat as string,",
+				"          lng as string,",
+				"          alt as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenCircuits",
+				"OrigenCircuits derive(circuitId = toInteger(trim(circuitId)),",
+				"          circuitRef = lower(trim(circuitRef)),",
+				"          name = regexReplace(trim(name), ' +', ' '),",
+				"          location = regexReplace(trim(location), ' +', ' '),",
+				"          country = regexReplace(trim(country), ' +', ' '),",
+				"          lat = toDecimal(trim(lat), 9, 6),",
+				"          lng = toDecimal(trim(lng), 9, 6),",
+				"          alt = toInteger(trim(alt)),",
+				"          url = iif(regexMatch(trim(url), `^(?:\\\\N)?$`), toString(null()), trim(url))) ~> LimpiezaCircuits",
+				"LimpiezaCircuits sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          circuitId as integer,",
+				"          circuitRef as string,",
+				"          name as string,",
+				"          location as string,",
+				"          country as string,",
+				"          lat as decimal(9,6),",
+				"          lng as decimal(9,6),",
+				"          alt as integer,",
+				"          url as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          circuitId,",
+				"          circuitRef,",
+				"          name,",
+				"          location,",
+				"          country,",
+				"          lat,",
+				"          lng,",
+				"          alt,",
+				"          url",
+				"     )) ~> DestinoCircuits"
+			]
+		}
+	}
+}

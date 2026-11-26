@@ -1,0 +1,355 @@
+{
+	"name": "DF_Silver_Results",
+	"properties": {
+		"folder": {
+			"name": "Silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Results_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenResults"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_Races_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "ReferenciaRaces"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_Drivers_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "ReferenciaDrivers"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_Constructors_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "ReferenciaConstructors"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_Status_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "ReferenciaStatus"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_Results_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoResults"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_QuarantineResults_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoCuarentena"
+				}
+			],
+			"transformations": [
+				{
+					"name": "ConservarDatosOriginales"
+				},
+				{
+					"name": "LimpiezaResults"
+				},
+				{
+					"name": "ClaveRaces"
+				},
+				{
+					"name": "ValidarRace"
+				},
+				{
+					"name": "ClaveDrivers"
+				},
+				{
+					"name": "ValidarDriver"
+				},
+				{
+					"name": "ClaveConstructors"
+				},
+				{
+					"name": "ValidarConstructor"
+				},
+				{
+					"name": "ClaveStatus"
+				},
+				{
+					"name": "ValidarStatus"
+				},
+				{
+					"name": "ValidacionResults"
+				},
+				{
+					"name": "SepararResults"
+				},
+				{
+					"name": "DeduplicacionResults"
+				},
+				{
+					"name": "PrepararCuarentena"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          resultId as string,",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          constructorId as string,",
+				"          number as string,",
+				"          grid as string,",
+				"          position as string,",
+				"          positionText as string,",
+				"          positionOrder as string,",
+				"          points as string,",
+				"          laps as string,",
+				"          time as string,",
+				"          milliseconds as string,",
+				"          fastestLap as string,",
+				"          rank as string,",
+				"          fastestLapTime as string,",
+				"          fastestLapSpeed as string,",
+				"          statusId as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenResults",
+				"source(output(",
+				"          raceId as integer,",
+				"          year as integer,",
+				"          round as integer,",
+				"          circuitId as integer,",
+				"          name as string,",
+				"          date as date,",
+				"          time as string,",
+				"          url as string,",
+				"          fp1_date as string,",
+				"          fp1_time as string,",
+				"          fp2_date as string,",
+				"          fp2_time as string,",
+				"          fp3_date as string,",
+				"          fp3_time as string,",
+				"          quali_date as string,",
+				"          quali_time as string,",
+				"          sprint_date as string,",
+				"          sprint_time as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ReferenciaRaces",
+				"source(output(",
+				"          driverId as integer,",
+				"          driverRef as string,",
+				"          number as integer,",
+				"          code as string,",
+				"          forename as string,",
+				"          surname as string,",
+				"          dob as date,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ReferenciaDrivers",
+				"source(output(",
+				"          constructorId as integer,",
+				"          constructorRef as string,",
+				"          name as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ReferenciaConstructors",
+				"source(output(",
+				"          statusId as integer,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ReferenciaStatus",
+				"OrigenResults derive(raw_result_id = resultId,",
+				"          raw_race_id = raceId,",
+				"          raw_driver_id = driverId,",
+				"          raw_constructor_id = constructorId,",
+				"          raw_points = points) ~> ConservarDatosOriginales",
+				"ConservarDatosOriginales derive(resultId = toInteger(trim(resultId)),",
+				"          raceId = toInteger(trim(raceId)),",
+				"          driverId = toInteger(trim(driverId)),",
+				"          constructorId = toInteger(trim(constructorId)),",
+				"          number = toInteger(trim(number)),",
+				"          grid = toInteger(trim(grid)),",
+				"          position = toInteger(trim(position)),",
+				"          positionText = upper(iif(regexMatch(trim(positionText), `^(?:\\\\N)?$`), toString(null()), trim(positionText))),",
+				"          positionOrder = toInteger(trim(positionOrder)),",
+				"          points = toDecimal(trim(points), 12, 6),",
+				"          laps = toInteger(trim(laps)),",
+				"          time = iif(regexMatch(trim(time), `^(?:\\\\N)?$`), toString(null()), trim(time)),",
+				"          milliseconds = toLong(trim(milliseconds)),",
+				"          fastestLap = toInteger(trim(fastestLap)),",
+				"          rank = toInteger(trim(rank)),",
+				"          fastestLapTime = iif(regexMatch(trim(fastestLapTime), `^(?:\\\\N)?$`), toString(null()), trim(fastestLapTime)),",
+				"          fastestLapSpeed = toDecimal(trim(fastestLapSpeed), 9, 3),",
+				"          statusId = toInteger(trim(statusId))) ~> LimpiezaResults",
+				"ReferenciaRaces select(mapColumn(",
+				"          refRaceId = raceId",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ClaveRaces",
+				"LimpiezaResults, ClaveRaces lookup(raceId == refRaceId,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> ValidarRace",
+				"ReferenciaDrivers select(mapColumn(",
+				"          refDriverId = driverId",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ClaveDrivers",
+				"ValidarRace, ClaveDrivers lookup(driverId == refDriverId,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> ValidarDriver",
+				"ReferenciaConstructors select(mapColumn(",
+				"          refConstructorId = constructorId",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ClaveConstructors",
+				"ValidarDriver, ClaveConstructors lookup(constructorId == refConstructorId,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> ValidarConstructor",
+				"ReferenciaStatus select(mapColumn(",
+				"          refStatusId = statusId",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> ClaveStatus",
+				"ValidarConstructor, ClaveStatus lookup(statusId == refStatusId,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> ValidarStatus",
+				"ValidarStatus derive(quarantine_reason =  case(     isNull(resultId) || resultId <= 0,     'INVALID_RESULT_ID',      isNull(raceId) || isNull(refRaceId),     'INVALID_RACE_ID',      isNull(driverId) || isNull(refDriverId),     'INVALID_DRIVER_ID',      isNull(constructorId) || isNull(refConstructorId),     'INVALID_CONSTRUCTOR_ID',      isNull(statusId) || isNull(refStatusId),     'INVALID_STATUS_ID',      isNull(points),     'INVALID_POINTS',      points < 0,     'NEGATIVE_POINTS',      isNull(grid) || grid < 0,     'INVALID_GRID',      isNull(positionOrder) || positionOrder <= 0,     'INVALID_POSITION_ORDER',      isNull(laps) || laps < 0,     'INVALID_LAPS',      'VALIDO' )) ~> ValidacionResults",
+				"ValidacionResults split(quarantine_reason == 'VALIDO',",
+				"     disjoint: false) ~> SepararResults@(ResultsValidos, ResultsInvalidos)",
+				"SepararResults@ResultsValidos aggregate(groupBy(resultId),",
+				"     raceId = first(raceId),",
+				"          driverId = first(driverId),",
+				"          constructorId = first(constructorId),",
+				"          number = first(number),",
+				"          grid = first(grid),",
+				"          position = first(position),",
+				"          positionText = first(positionText),",
+				"          positionOrder = first(positionOrder),",
+				"          points = first(points),",
+				"          laps = first(laps),",
+				"          time = first(time),",
+				"          milliseconds = first(milliseconds),",
+				"          fastestLap = first(fastestLap),",
+				"          rank = first(rank),",
+				"          fastestLapTime = first(fastestLapTime),",
+				"          fastestLapSpeed = first(fastestLapSpeed),",
+				"          statusId = first(statusId)) ~> DeduplicacionResults",
+				"SepararResults@ResultsInvalidos derive({_source_file} = 'results.csv',",
+				"          {_rejected_at} = currentUTC()) ~> PrepararCuarentena",
+				"DeduplicacionResults sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          resultId as integer,",
+				"          raceId as integer,",
+				"          driverId as integer,",
+				"          constructorId as integer,",
+				"          number as integer,",
+				"          grid as integer,",
+				"          position as integer,",
+				"          positionText as string,",
+				"          positionOrder as integer,",
+				"          points as decimal(12,6),",
+				"          laps as integer,",
+				"          time as string,",
+				"          milliseconds as long,",
+				"          fastestLap as integer,",
+				"          rank as integer,",
+				"          fastestLapTime as string,",
+				"          fastestLapSpeed as decimal(9,3),",
+				"          statusId as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          resultId,",
+				"          raceId,",
+				"          driverId,",
+				"          constructorId,",
+				"          number,",
+				"          grid,",
+				"          position,",
+				"          positionText,",
+				"          positionOrder,",
+				"          points,",
+				"          laps,",
+				"          time,",
+				"          milliseconds,",
+				"          fastestLap,",
+				"          rank,",
+				"          fastestLapTime,",
+				"          fastestLapSpeed,",
+				"          statusId",
+				"     )) ~> DestinoResults",
+				"PrepararCuarentena sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          quarantine_id as long,",
+				"          raw_result_id as string,",
+				"          raw_race_id as string,",
+				"          raw_driver_id as string,",
+				"          raw_constructor_id as string,",
+				"          raw_points as string,",
+				"          quarantine_reason as string,",
+				"          {_source_file} as string,",
+				"          {_rejected_at} as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          raw_result_id,",
+				"          raw_race_id,",
+				"          raw_driver_id,",
+				"          raw_constructor_id,",
+				"          raw_points,",
+				"          quarantine_reason,",
+				"          {_source_file},",
+				"          {_rejected_at}",
+				"     )) ~> DestinoCuarentena"
+			]
+		}
+	}
+}

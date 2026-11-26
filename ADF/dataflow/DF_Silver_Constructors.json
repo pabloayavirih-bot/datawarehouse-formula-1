@@ -1,0 +1,76 @@
+{
+	"name": "DF_Silver_Constructors",
+	"properties": {
+		"folder": {
+			"name": "Silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Constructors_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenConstructors"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_Constructors_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoConstructors"
+				}
+			],
+			"transformations": [
+				{
+					"name": "LimpiezaConstructors"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          constructorId as string,",
+				"          constructorRef as string,",
+				"          name as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenConstructors",
+				"OrigenConstructors derive(constructorId = toInteger(trim(constructorId)),",
+				"          constructorRef = lower(trim(constructorRef)),",
+				"          name = regexReplace(trim(name), ' +', ' '),",
+				"          nationality = iif(isNull(nationality) || regexMatch(trim(nationality), `^(?:\\\\N)?$`), 'Unknown', regexReplace(trim(nationality), ' +', ' ')),",
+				"          url = iif(regexMatch(trim(url), `^(?:\\\\N)?$`), toString(null()), trim(url))) ~> LimpiezaConstructors",
+				"LimpiezaConstructors sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          constructorId as integer,",
+				"          constructorRef as string,",
+				"          name as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          constructorId,",
+				"          constructorRef,",
+				"          name,",
+				"          nationality,",
+				"          url",
+				"     )) ~> DestinoConstructors"
+			]
+		}
+	}
+}
