@@ -1,0 +1,73 @@
+{
+	"name": "DF_Bronze_PitStops",
+	"properties": {
+		"folder": {
+			"name": "Bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_PitStops_CSV",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenPitStops"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_PitStops_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoPitStops"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          stop as string,",
+				"          lap as string,",
+				"          time as string,",
+				"          duration as string,",
+				"          milliseconds as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> OrigenPitStops",
+				"OrigenPitStops sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          stop as string,",
+				"          lap as string,",
+				"          time as string,",
+				"          duration as string,",
+				"          milliseconds as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          raceId,",
+				"          driverId,",
+				"          stop,",
+				"          lap,",
+				"          time,",
+				"          duration,",
+				"          milliseconds",
+				"     )) ~> DestinoPitStops"
+			]
+		}
+	}
+}

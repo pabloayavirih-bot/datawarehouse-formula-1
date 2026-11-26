@@ -1,0 +1,58 @@
+{
+	"name": "DF_Bronze_Status",
+	"properties": {
+		"folder": {
+			"name": "Bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Status_CSV",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenStatus"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Status_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoStatus"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          statusId as string,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> OrigenStatus",
+				"OrigenStatus sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          statusId as string,",
+				"          status as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          statusId,",
+				"          status",
+				"     )) ~> DestinoStatus"
+			]
+		}
+	}
+}

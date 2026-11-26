@@ -1,0 +1,79 @@
+{
+	"name": "DF_Bronze_Drivers",
+	"properties": {
+		"folder": {
+			"name": "Bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Drivers_CSV",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenDrivers"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Drivers_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoDrivers"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          driverId as string,",
+				"          driverRef as string,",
+				"          number as string,",
+				"          code as string,",
+				"          forename as string,",
+				"          surname as string,",
+				"          dob as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> OrigenDrivers",
+				"OrigenDrivers sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          driverId as string,",
+				"          driverRef as string,",
+				"          number as string,",
+				"          code as string,",
+				"          forename as string,",
+				"          surname as string,",
+				"          dob as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          driverId,",
+				"          driverRef,",
+				"          number,",
+				"          code,",
+				"          forename,",
+				"          surname,",
+				"          dob,",
+				"          nationality,",
+				"          url",
+				"     )) ~> DestinoDrivers"
+			]
+		}
+	}
+}

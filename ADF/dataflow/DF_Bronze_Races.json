@@ -1,0 +1,106 @@
+{
+	"name": "DF_Bronze_Races",
+	"properties": {
+		"folder": {
+			"name": "Bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Races_CSV",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenRaces"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Races_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoRaces"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          raceId as string,",
+				"          year as string,",
+				"          round as string,",
+				"          circuitId as string,",
+				"          name as string,",
+				"          date as string,",
+				"          time as string,",
+				"          url as string,",
+				"          fp1_date as string,",
+				"          fp1_time as string,",
+				"          fp2_date as string,",
+				"          fp2_time as string,",
+				"          fp3_date as string,",
+				"          fp3_time as string,",
+				"          quali_date as string,",
+				"          quali_time as string,",
+				"          sprint_date as string,",
+				"          sprint_time as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> OrigenRaces",
+				"OrigenRaces sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          raceId as string,",
+				"          year as string,",
+				"          round as string,",
+				"          circuitId as string,",
+				"          name as string,",
+				"          date as string,",
+				"          time as string,",
+				"          url as string,",
+				"          fp1_date as string,",
+				"          fp1_time as string,",
+				"          fp2_date as string,",
+				"          fp2_time as string,",
+				"          fp3_date as string,",
+				"          fp3_time as string,",
+				"          quali_date as string,",
+				"          quali_time as string,",
+				"          sprint_date as string,",
+				"          sprint_time as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          raceId,",
+				"          year,",
+				"          round,",
+				"          circuitId,",
+				"          name,",
+				"          date,",
+				"          time,",
+				"          url,",
+				"          fp1_date,",
+				"          fp1_time,",
+				"          fp2_date,",
+				"          fp2_time,",
+				"          fp3_date,",
+				"          fp3_time,",
+				"          quali_date,",
+				"          quali_time,",
+				"          sprint_date,",
+				"          sprint_time",
+				"     )) ~> DestinoRaces"
+			]
+		}
+	}
+}

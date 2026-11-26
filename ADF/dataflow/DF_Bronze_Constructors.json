@@ -1,0 +1,67 @@
+{
+	"name": "DF_Bronze_Constructors",
+	"properties": {
+		"folder": {
+			"name": "Bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Constructors_CSV",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenConstructors"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_Constructors_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoConstructors"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          constructorId as string,",
+				"          constructorRef as string,",
+				"          name as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> OrigenConstructors",
+				"OrigenConstructors sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          constructorId as string,",
+				"          constructorRef as string,",
+				"          name as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          constructorId,",
+				"          constructorRef,",
+				"          name,",
+				"          nationality,",
+				"          url",
+				"     )) ~> DestinoConstructors"
+			]
+		}
+	}
+}
