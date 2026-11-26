@@ -1,0 +1,97 @@
+{
+	"name": "DS_Silver_Races_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_DW",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "raceId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "year",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "round",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "circuitId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "date",
+				"type": "date"
+			},
+			{
+				"name": "time",
+				"type": "time",
+				"scale": 0
+			},
+			{
+				"name": "url",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fp1_date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fp1_time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fp2_date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fp2_time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fp3_date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fp3_time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "quali_date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "quali_time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sprint_date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sprint_time",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "races"
+		}
+	}
+}
