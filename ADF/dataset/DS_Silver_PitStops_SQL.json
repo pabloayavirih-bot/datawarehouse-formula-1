@@ -33,8 +33,7 @@
 			},
 			{
 				"name": "time",
-				"type": "time",
-				"scale": 0
+				"type": "nvarchar"
 			},
 			{
 				"name": "duration",

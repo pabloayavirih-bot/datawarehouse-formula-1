@@ -1,0 +1,94 @@
+{
+	"name": "DF_Silver_PitStops",
+	"properties": {
+		"folder": {
+			"name": "Silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_PitStops_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "OrigenPitStops"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_PitStops_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "DestinoPitStops"
+				}
+			],
+			"transformations": [
+				{
+					"name": "LimpiezaPitStops"
+				},
+				{
+					"name": "DeduplicacionPitStops"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          stop as string,",
+				"          lap as string,",
+				"          time as string,",
+				"          duration as string,",
+				"          milliseconds as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> OrigenPitStops",
+				"OrigenPitStops derive(raceId = toInteger(trim(raceId)),",
+				"          driverId = toInteger(trim(driverId)),",
+				"          stop = toInteger(trim(stop)),",
+				"          lap = toInteger(trim(lap)),",
+				"          time = iif(regexMatch(trim(time), `^(?:\\\\N)?$`), toString(null()), trim(time)),",
+				"          duration = iif(regexMatch(trim(duration), `^(?:\\\\N)?$`), toString(null()), trim(duration)),",
+				"          milliseconds = toInteger(trim(milliseconds))) ~> LimpiezaPitStops",
+				"LimpiezaPitStops aggregate(groupBy(raceId,",
+				"          driverId,",
+				"          stop),",
+				"     lap = first(lap),",
+				"          time = first(time),",
+				"          duration = first(duration),",
+				"          milliseconds = first(milliseconds)) ~> DeduplicacionPitStops",
+				"DeduplicacionPitStops sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          raceId as integer,",
+				"          driverId as integer,",
+				"          stop as integer,",
+				"          lap as integer,",
+				"          time as string,",
+				"          duration as string,",
+				"          milliseconds as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          raceId,",
+				"          driverId,",
+				"          stop,",
+				"          lap,",
+				"          time,",
+				"          duration,",
+				"          milliseconds",
+				"     )) ~> DestinoPitStops"
+			]
+		}
+	}
+}
