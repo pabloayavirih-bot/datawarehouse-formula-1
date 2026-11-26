@@ -1,0 +1,54 @@
+{
+	"name": "DS_Silver_PitStops_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_DW",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "raceId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "driverId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stop",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "lap",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "time",
+				"type": "time",
+				"scale": 0
+			},
+			{
+				"name": "duration",
+				"type": "nvarchar"
+			},
+			{
+				"name": "milliseconds",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "pit_stops"
+		}
+	}
+}

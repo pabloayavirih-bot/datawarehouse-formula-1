@@ -1,0 +1,109 @@
+{
+	"name": "DS_Silver_Results_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_DW",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "resultId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "raceId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "driverId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "constructorId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "grid",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "position",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "positionText",
+				"type": "nvarchar"
+			},
+			{
+				"name": "positionOrder",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "points",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 6
+			},
+			{
+				"name": "laps",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "milliseconds",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "fastestLap",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "rank",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "fastestLapTime",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fastestLapSpeed",
+				"type": "decimal",
+				"precision": 9,
+				"scale": 3
+			},
+			{
+				"name": "statusId",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "results"
+		}
+	}
+}
