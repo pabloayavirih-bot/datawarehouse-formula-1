@@ -1,0 +1,35 @@
+{
+	"name": "DS_Bronze_Status_CSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Storage_RAW",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "status.csv",
+				"fileSystem": "raw"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "statusId",
+				"type": "String"
+			},
+			{
+				"name": "status",
+				"type": "String"
+			}
+		]
+	}
+}

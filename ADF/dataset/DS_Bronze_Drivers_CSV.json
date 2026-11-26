@@ -1,0 +1,63 @@
+{
+	"name": "DS_Bronze_Drivers_CSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Storage_RAW",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "drivers.csv",
+				"fileSystem": "raw"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "driverId",
+				"type": "String"
+			},
+			{
+				"name": "driverRef",
+				"type": "String"
+			},
+			{
+				"name": "number",
+				"type": "String"
+			},
+			{
+				"name": "code",
+				"type": "String"
+			},
+			{
+				"name": "forename",
+				"type": "String"
+			},
+			{
+				"name": "surname",
+				"type": "String"
+			},
+			{
+				"name": "dob",
+				"type": "String"
+			},
+			{
+				"name": "nationality",
+				"type": "String"
+			},
+			{
+				"name": "url",
+				"type": "String"
+			}
+		]
+	}
+}
