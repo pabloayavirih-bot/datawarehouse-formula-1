@@ -1,0 +1,22 @@
+﻿# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.tfplan
+crash.log
+crash.*.log
+
+# Credenciales
+.env
+.env.*
+*.pem
+*.key
+
+# Archivos temporales
+*.tmp
+*.bak
+~$*
+Thumbs.db
+Desktop.ini
