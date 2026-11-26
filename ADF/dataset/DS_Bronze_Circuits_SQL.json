@@ -1,0 +1,56 @@
+{
+	"name": "DS_Bronze_Circuits_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_DW",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "circuitId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "circuitRef",
+				"type": "nvarchar"
+			},
+			{
+				"name": "name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "location",
+				"type": "nvarchar"
+			},
+			{
+				"name": "country",
+				"type": "nvarchar"
+			},
+			{
+				"name": "lat",
+				"type": "nvarchar"
+			},
+			{
+				"name": "lng",
+				"type": "nvarchar"
+			},
+			{
+				"name": "alt",
+				"type": "nvarchar"
+			},
+			{
+				"name": "url",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "circuits"
+		}
+	}
+}

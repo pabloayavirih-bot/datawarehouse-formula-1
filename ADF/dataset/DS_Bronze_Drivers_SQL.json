@@ -1,0 +1,56 @@
+{
+	"name": "DS_Bronze_Drivers_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_DW",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "driverId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "driverRef",
+				"type": "nvarchar"
+			},
+			{
+				"name": "number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "forename",
+				"type": "nvarchar"
+			},
+			{
+				"name": "surname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "dob",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nationality",
+				"type": "nvarchar"
+			},
+			{
+				"name": "url",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "drivers"
+		}
+	}
+}

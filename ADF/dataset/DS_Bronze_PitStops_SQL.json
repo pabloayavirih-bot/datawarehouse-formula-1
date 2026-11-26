@@ -1,0 +1,48 @@
+{
+	"name": "DS_Bronze_PitStops_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL_DW",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Bronze"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "raceId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "driverId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "stop",
+				"type": "nvarchar"
+			},
+			{
+				"name": "lap",
+				"type": "nvarchar"
+			},
+			{
+				"name": "time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "duration",
+				"type": "nvarchar"
+			},
+			{
+				"name": "milliseconds",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "pit_stops"
+		}
+	}
+}
